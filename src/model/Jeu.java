@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import tools.ChessPieceFactory;
-import tools.ChessSinglePieceFactory;
+//import tools.ChessSinglePieceFactory;
 
 /**
  * @author francoise.perrin

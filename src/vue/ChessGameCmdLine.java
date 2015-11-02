@@ -1,6 +1,8 @@
 package vue;
 
 import controler.controlerLocal.ChessGameControler;
+import java.util.Observable;
+import java.util.Observer;
 import model.Coord;
 import model.observable.ChessGame;
 
@@ -11,7 +13,7 @@ import model.observable.ChessGame;
  * Inspiration Jacques SARAYDARYAN, Adrien GUENARD *
  * 
  */
-public class ChessGameCmdLine {
+public class ChessGameCmdLine implements Observer{
 	
 	public   ChessGameCmdLine(ChessGameControler chessGameControler) {
 		
@@ -43,5 +45,12 @@ public class ChessGameCmdLine {
 		System.out.println(chessGameControler + "\n");
 		
 	}
+
+    @Override
+    public void update(Observable o, Object arg) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        System.out.println(o.getClass() + " - " + o.toString() + "\n" + arg.getClass() + " - " + arg.toString());
+        System.out.println(((ChessGame)o).toString());
+    }
 
 }
