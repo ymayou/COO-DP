@@ -6,8 +6,10 @@
 package controler.controlerLocal;
 
 import controler.ChessGameControlers;
+import java.util.List;
 import model.Coord;
 import model.Couleur;
+import model.PieceIHM;
 import model.observable.ChessGame;
 
 /**
@@ -26,6 +28,10 @@ public class ChessGameControler implements ChessGameControlers{
     public ChessGameControler(ChessGame game)
     {
         this.game = game;
+    }
+    
+    public List<PieceIHM> getPiecesIHM(){
+        return game.getPiecesIHM();
     }
     
     @Override

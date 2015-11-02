@@ -5,9 +5,11 @@
  */
 package model.observable;
 
+import java.util.List;
 import java.util.Observable;
 import model.Couleur;
 import model.Echiquier;
+import model.PieceIHM;
 
 /**
  *
@@ -52,5 +54,9 @@ public class ChessGame extends Observable
     public Couleur getColorCurrentPlayer()
     {
         return ech.getColorCurrentPlayer();
+    }
+    
+    public List<PieceIHM> getPiecesIHM(){
+	return ech.getPiecesIHM();
     }
 }
