@@ -34,7 +34,7 @@ public class LauncherGUI {
         JFrame frame = viewCmd;
         frame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         frame.pack();
-        frame.setResizable(true);
+        frame.setResizable(false);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }

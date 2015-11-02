@@ -50,7 +50,7 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
     public ChessGameGUI(ChessGameControler controler) {
         this.controler = controler;
 
-        Dimension boardSize = new Dimension(600, 600);
+        Dimension boardSize = new Dimension(800, 800);
 
 //  Use a Layered Pane for this this application
         layeredPane = new JLayeredPane();
@@ -83,11 +83,10 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
         listePiece = controler.getPiecesIHM();
         
         for(PieceIHM p : listePiece){
-            System.out.println(ChessImageProvider.getImageFile(p.getTypePiece(), p.getCouleur()));
-            JLabel piece = new JLabel(new ImageIcon(ChessImageProvider.getImageFile(p.getTypePiece(), p.getCouleur())));
             List<Coord> listCoord = p.getList();
             for(Coord c : listCoord){
-                int pos = (8 * c.x) + c.y;
+                JLabel piece = new JLabel(new ImageIcon(ChessImageProvider.getImageFile(p.getTypePiece(), p.getCouleur())));
+                int pos = (8 * c.y) + c.x;
                 JPanel panel = (JPanel) chessBoard.getComponent(pos);
                 panel.add(piece);
             }
