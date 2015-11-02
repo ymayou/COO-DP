@@ -46,6 +46,11 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
     JLabel chessPiece;
     int xAdjustment;
     int yAdjustment;
+    
+    int xInit;
+    int yInit;
+    int xFinal;
+    int yFinal;
 
     public ChessGameGUI(ChessGameControler controler) {
         this.controler = controler;
@@ -91,25 +96,11 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
                 panel.add(piece);
             }
         }
-        
-        
-        /*JLabel piece = new JLabel(new ImageIcon("src\\images\\" + ChessPieceImage.PIONNOIR.imageFile));
-        JPanel panel = (JPanel) chessBoard.getComponent(0);
-        panel.add(piece);
-        piece = new JLabel(new ImageIcon("src\\images\\" + ChessPieceImage.PIONBLANC.imageFile));
-        panel = (JPanel) chessBoard.getComponent(15);
-        panel.add(piece);
-        piece = new JLabel(new ImageIcon("src\\images\\" + ChessPieceImage.ROINOIR.imageFile));
-        panel = (JPanel) chessBoard.getComponent(16);
-        panel.add(piece);
-        piece = new JLabel(new ImageIcon("src\\images\\" + ChessPieceImage.CAVALIERBLANC.imageFile));
-        panel = (JPanel) chessBoard.getComponent(20);
-        panel.add(piece);*/
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -128,6 +119,9 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
         chessPiece.setLocation(e.getX() + xAdjustment, e.getY() + yAdjustment);
         chessPiece.setSize(chessPiece.getWidth(), chessPiece.getHeight());
         layeredPane.add(chessPiece, JLayeredPane.DRAG_LAYER);
+        
+        xInit = chessPiece.getX()/100;
+        yInit = chessPiece.getY()/100;
     }
 
     @Override
@@ -138,15 +132,22 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
 
         chessPiece.setVisible(false);
         Component c = chessBoard.findComponentAt(e.getX(), e.getY());
+        
+        
+        xFinal = c.getX() / 100;
+        yFinal = c.getY() / 100;
+        System.out.println("xi = " + xInit + " yi = " + yInit + " xf = " + xFinal + " yf = " + yFinal);
+        
+        controler.move(new Coord(xInit, yInit), new Coord(xFinal, yFinal));
 
-        if (c instanceof JLabel) {
+        /*if (c instanceof JLabel) {
             Container parent = c.getParent();
             parent.remove(0);
             parent.add(chessPiece);
         } else {
             Container parent = (Container) c;
             parent.add(chessPiece);
-        }
+        }*/
 
         chessPiece.setVisible(true);
     }

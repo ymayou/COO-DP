@@ -30,13 +30,16 @@ public class ChessGame extends Observable
     public boolean move (int xInit, int yInit, int xFinal, int yFinal)
     {
         System.out.println(ech.toString());
-        setChanged();
-        notifyObservers();
+        
         if(ech.isMoveOk(xInit, yInit, xFinal, yFinal)){
             ech.move(xInit, yInit, xFinal, yFinal);
             ech.switchJoueur();
+            setChanged();
+            notifyObservers();
             return true;
         } else {
+            setChanged();
+            notifyObservers();
             return false;
         }
         
