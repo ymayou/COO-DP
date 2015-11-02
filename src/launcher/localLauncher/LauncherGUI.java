@@ -18,6 +18,7 @@ import vue.ChessGameGUI;
  * @author florian.garcia
  */
 public class LauncherGUI {
+    public static boolean DEBUG = false;
     
     public static void main(String[] args){
         ChessGame chessGame;
@@ -34,7 +35,7 @@ public class LauncherGUI {
         JFrame frame = viewCmd;
         frame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         frame.pack();
-        frame.setResizable(false);
+        frame.setResizable(!DEBUG);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }

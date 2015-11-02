@@ -46,7 +46,7 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
     JLabel chessPiece;
     int xAdjustment;
     int yAdjustment;
-    
+
     int xInit;
     int yInit;
     int xFinal;
@@ -86,10 +86,10 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
 //Add a few pieces to the board
         List<PieceIHM> listePiece = new LinkedList();
         listePiece = controler.getPiecesIHM();
-        
-        for(PieceIHM p : listePiece){
+
+        for (PieceIHM p : listePiece) {
             List<Coord> listCoord = p.getList();
-            for(Coord c : listCoord){
+            for (Coord c : listCoord) {
                 JLabel piece = new JLabel(new ImageIcon(ChessImageProvider.getImageFile(p.getTypePiece(), p.getCouleur())));
                 int pos = (8 * c.y) + c.x;
                 JPanel panel = (JPanel) chessBoard.getComponent(pos);
@@ -105,23 +105,22 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
 
     @Override
     public void mousePressed(MouseEvent e) {
-       chessPiece = null;
+        chessPiece = null;
         Component c = chessBoard.findComponentAt(e.getX(), e.getY());
 
-        if (c instanceof JPanel) {
-            return;
-        }
+        if (c instanceof JLabel) {
 
-        Point parentLocation = c.getParent().getLocation();
-        xAdjustment = parentLocation.x - e.getX();
-        yAdjustment = parentLocation.y - e.getY();
-        chessPiece = (JLabel) c;
-        chessPiece.setLocation(e.getX() + xAdjustment, e.getY() + yAdjustment);
-        chessPiece.setSize(chessPiece.getWidth(), chessPiece.getHeight());
-        layeredPane.add(chessPiece, JLayeredPane.DRAG_LAYER);
-        
-        xInit = chessPiece.getX()/100;
-        yInit = chessPiece.getY()/100;
+            Point parentLocation = c.getParent().getLocation();
+            xAdjustment = parentLocation.x - e.getX();
+            yAdjustment = parentLocation.y - e.getY();
+            chessPiece = (JLabel) c;
+            chessPiece.setLocation(e.getX() + xAdjustment, e.getY() + yAdjustment);
+            chessPiece.setSize(chessPiece.getWidth(), chessPiece.getHeight());
+            layeredPane.add(chessPiece, JLayeredPane.DRAG_LAYER);
+
+            xInit = chessPiece.getX() / 100;
+            yInit = chessPiece.getY() / 100;
+        }
     }
 
     @Override
@@ -132,24 +131,19 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
 
         chessPiece.setVisible(false);
         Component c = chessBoard.findComponentAt(e.getX(), e.getY());
-        
-        
+
         xFinal = c.getX() / 100;
         yFinal = c.getY() / 100;
         System.out.println("xi = " + xInit + " yi = " + yInit + " xf = " + xFinal + " yf = " + yFinal);
-        
         controler.move(new Coord(xInit, yInit), new Coord(xFinal, yFinal));
-
-        /*if (c instanceof JLabel) {
-            Container parent = c.getParent();
-            parent.remove(0);
-            parent.add(chessPiece);
-        } else {
-            Container parent = (Container) c;
-            parent.add(chessPiece);
-        }*/
-
-        chessPiece.setVisible(true);
+        /*if (!controler.move(new Coord(xInit, yInit), new Coord(xFinal, yFinal))) {
+            //chessPiece.setLocation(xInit * 100, yInit * 100);
+            //this.repaint();
+        }
+        
+        chessPiece.setVisible(true);*/
+        //repaint();
+        layeredPane.remove(chessPiece);
     }
 
     @Override
@@ -158,7 +152,7 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
 
     @Override
     public void mouseExited(MouseEvent e) {
-        
+
     }
 
     @Override
@@ -171,14 +165,30 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        
+
     }
 
     @Override
     public void update(Observable o, Object arg) {
-        System.out.println(o.getClass() + " - " + o.toString() + "\n" + arg.getClass() + " - " + arg.toString());
-        System.out.println(((ChessGame) o).toString());
-        this.repaint();
+        List<PieceIHM> listePiece = new LinkedList();
+        listePiece = controler.getPiecesIHM();
+        
+        for(int i=0;i<chessBoard.getComponentCount();i++ ){
+            
+            ((JPanel)(chessBoard.getComponent(i))).removeAll();
+        }
+
+        for (PieceIHM p : listePiece) {
+            List<Coord> listCoord = p.getList();
+            for (Coord c : listCoord) {
+                JLabel piece = new JLabel(new ImageIcon(ChessImageProvider.getImageFile(p.getTypePiece(), p.getCouleur())));
+                int pos = (8 * c.y) + c.x;
+                JPanel panel = (JPanel) chessBoard.getComponent(pos);
+                panel.removeAll();
+                panel.add(piece);
+            }
+        }
+        chessBoard.repaint();
     }
 
 }
