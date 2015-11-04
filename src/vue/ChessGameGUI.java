@@ -5,7 +5,8 @@
  */
 package vue;
 
-import controler.controlerLocal.ChessGameControler;
+import controler.ChessGameControlers;
+import controler.controlerNetwork.ChessGameControler;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -52,8 +53,8 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
     int xFinal;
     int yFinal;
 
-    public ChessGameGUI(ChessGameControler controler) {
-        this.controler = controler;
+    public ChessGameGUI(ChessGameControlers controler) {
+        this.controler = (ChessGameControler) controler;
 
         Dimension boardSize = new Dimension(800, 800);
 
@@ -84,8 +85,7 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
         }
 
 //Add a few pieces to the board
-        List<PieceIHM> listePiece = new LinkedList();
-        listePiece = controler.getPiecesIHM();
+        List<PieceIHM> listePiece = ((ChessGameControler)controler).getPiecesIHM();
 
         for (PieceIHM p : listePiece) {
             List<Coord> listCoord = p.getList();

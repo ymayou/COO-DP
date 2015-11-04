@@ -7,7 +7,9 @@ package Network;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.PrintWriter;
+import java.net.Socket;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,24 +20,28 @@ import java.util.logging.Logger;
  */
 public class Recepteur implements Runnable {
 
-    private BufferedReader in;
-    private Object message = null;
+    private Socket socket = null;
+    private ObjectInputStream input;
 
-    public Recepteur(BufferedReader in, Object mess) {
-        this.in = in;
-        this.message = mess;
+    public Recepteur(Socket socket) {
+        this.socket = socket;
+        try {
+            this.input = new ObjectInputStream(socket.getInputStream());
+        } catch (IOException ex) {
+            Logger.getLogger(Recepteur.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Erreur de lecture");
+        }
     }
 
     @Override
     public void run() {
-        while (true) {
-            try {
-                message = in.read();
-                System.out.println("Message recu : " + message.toString());
-            } catch (IOException ex) {
-                Logger.getLogger(Recepteur.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
+        try {
+            Object obj = input.readObject();
+            System.out.println("read ok");
+        } catch (IOException e) {
+            System.err.println("Le serveur distant s'est déconnecté !");
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Recepteur.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

@@ -6,10 +6,13 @@
 
 package launcher.localLauncher;
 
-import controler.controlerLocal.ChessGameControler;
+import controler.controlerNetwork.ChessGameControler;
+import java.io.IOException;
+import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
-import launcher.test;
 import model.observable.ChessGame;
 import vue.ChessGameGUI;
 
@@ -18,24 +21,23 @@ import vue.ChessGameGUI;
  * @author florian.garcia
  */
 public class LauncherGUI {
-    public static boolean DEBUG = false;
     
     public static void main(String[] args){
         ChessGame chessGame;
         ChessGameControler chessGameControler;		
-
-        chessGame = new ChessGame();	
+        
+        
+        chessGame = new ChessGame();
         chessGameControler = new ChessGameControler(chessGame);
+        ChessGameGUI viewCmd = new ChessGameGUI(chessGameControler);
         
-        
-
-        ChessGameGUI viewCmd = new ChessGameGUI(chessGameControler);	
+        chessGameControler.initClient();
         chessGame.addObserver(viewCmd);
         
         JFrame frame = viewCmd;
         frame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         frame.pack();
-        frame.setResizable(!DEBUG);
+        frame.setResizable(false);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }

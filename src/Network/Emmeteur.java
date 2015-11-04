@@ -5,29 +5,37 @@
  */
 package Network;
 
-import java.io.PrintWriter;
-import java.util.Scanner;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author Flo
  */
-public class Emmeteur implements Runnable{
-    private PrintWriter out;
-    private Scanner sc = null;
-    private String message = null;
-
-    public Emmeteur(PrintWriter out) {
-        this.out = out;
-    }
-
-    @Override
-    public void run() {
-        while(true){
-            out.println(message);
-            out.flush();
+public class Emmeteur {
+    private Socket s;
+    private ObjectOutputStream output;
+    
+    public Emmeteur(Socket s) {
+        this.s = s;
+        try {
+            this.output = new ObjectOutputStream(s.getOutputStream());
+        } catch (IOException ex) {
+            Logger.getLogger(Emmeteur.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
-    
+    public void sendMessage(Object obj)
+    {
+        try {
+            this.output.writeObject(obj);
+        } catch (IOException ex) {
+            Logger.getLogger(Emmeteur.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }
