@@ -38,7 +38,7 @@ public class ChessGame extends Observable
             
         } 
         setChanged();
-        notifyObservers();
+        notifyObservers(ech.getPiecesIHM());
         return ret;
         
     }

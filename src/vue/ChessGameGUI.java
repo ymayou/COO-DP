@@ -137,7 +137,6 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
         xFinal = c.getX() / 100;
         yFinal = c.getY() / 100;
         controler.move(new Coord(xInit, yInit), new Coord(xFinal, yFinal));
-        layeredPane.remove(chessPiece);
     }
 
     @Override
@@ -164,13 +163,12 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
 
     @Override
     public void update(Observable o, Object arg) {
-        List<PieceIHM> listePiece = new LinkedList();
-        listePiece = controler.getPiecesIHM();
+        List<PieceIHM> listePiece = (LinkedList)arg;
         
-        for(int i=0;i<chessBoard.getComponentCount();i++ ){
-            
+        layeredPane.remove(chessPiece);
+
+        for(int i=0;i<chessBoard.getComponentCount();i++ )
             ((JPanel)(chessBoard.getComponent(i))).removeAll();
-        }
 
         for (PieceIHM p : listePiece) {
             List<Coord> listCoord = p.getList();
