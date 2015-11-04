@@ -131,18 +131,12 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
 
         chessPiece.setVisible(false);
         Component c = chessBoard.findComponentAt(e.getX(), e.getY());
-
+        if (c instanceof JLabel)
+            c = c.getParent();
+            
         xFinal = c.getX() / 100;
         yFinal = c.getY() / 100;
-        System.out.println("xi = " + xInit + " yi = " + yInit + " xf = " + xFinal + " yf = " + yFinal);
         controler.move(new Coord(xInit, yInit), new Coord(xFinal, yFinal));
-        /*if (!controler.move(new Coord(xInit, yInit), new Coord(xFinal, yFinal))) {
-            //chessPiece.setLocation(xInit * 100, yInit * 100);
-            //this.repaint();
-        }
-        
-        chessPiece.setVisible(true);*/
-        //repaint();
         layeredPane.remove(chessPiece);
     }
 
