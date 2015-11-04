@@ -18,4 +18,5 @@ public interface ChessGameControlers {
     public boolean isEnd();	
     public Couleur getColorCurrentPlayer(); 
     
+    
 }
