@@ -25,17 +25,20 @@ public class Recepteur implements Runnable {
 
     public Recepteur(Socket socket) {
         this.socket = socket;
+        
+    }
+
+    @Override
+    public void run() {
         try {
             this.input = new ObjectInputStream(socket.getInputStream());
         } catch (IOException ex) {
             Logger.getLogger(Recepteur.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println("Erreur de lecture");
         }
-    }
-
-    @Override
-    public void run() {
-        try {
+        
+        while(true){
+            try {
             Object obj = input.readObject();
             System.out.println("read ok");
         } catch (IOException e) {
@@ -43,6 +46,8 @@ public class Recepteur implements Runnable {
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Recepteur.class.getName()).log(Level.SEVERE, null, ex);
         }
+        }
+        
     }
 
 }

@@ -57,9 +57,10 @@ public class ChessGameControler implements ChessGameControlers, Runnable {
     {
         try {
             s = new Socket("127.0.0.1", 2009);
+            emmeteur = new Emmeteur(s);
             Thread thClient = new Thread(new Recepteur(s));
             thClient.start();
-            emmeteur = new Emmeteur(s);
+            
         } catch (IOException ex) {
             Logger.getLogger(ChessGameControler.class.getName()).log(Level.SEVERE, null, ex);
         }
