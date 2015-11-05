@@ -85,7 +85,7 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
         }
 
 //Add a few pieces to the board
-        List<PieceIHM> listePiece = ((ChessGameControler)controler).getPiecesIHM();
+        List<PieceIHM> listePiece = ((ChessGameControler) controler).getPiecesIHM();
 
         for (PieceIHM p : listePiece) {
             List<Coord> listCoord = p.getList();
@@ -120,7 +120,25 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
 
             xInit = chessPiece.getX() / 100;
             yInit = chessPiece.getY() / 100;
+
+            for (int i = 0; i < 800; i = i + 100) {
+                for (int j = 0; j < 800; j = j + 100) {
+                    Component p1 = chessBoard.findComponentAt(i, j);
+                    if (p1 instanceof JLabel) {
+                        p1 = p1.getParent();
+                    }
+                    if (controler.isMoveOk(xInit, yInit, i / 100, j / 100)) {
+                        p1.setBackground(Color.red);
+                        p1.repaint();
+                    } else if(xInit == i / 100 && yInit == j / 100){
+                        p1.setBackground(Color.blue);
+                        p1.repaint();
+                    }
+                }
+            }
+
         }
+
     }
 
     @Override
@@ -131,9 +149,10 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
 
         chessPiece.setVisible(false);
         Component c = chessBoard.findComponentAt(e.getX(), e.getY());
-        if (c instanceof JLabel)
+        if (c instanceof JLabel) {
             c = c.getParent();
-            
+        }
+
         xFinal = c.getX() / 100;
         yFinal = c.getY() / 100;
         controler.move(new Coord(xInit, yInit), new Coord(xFinal, yFinal));
@@ -163,13 +182,23 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
 
     @Override
     public void update(Observable o, Object arg) {
-        List<PieceIHM> listePiece = (LinkedList)arg;
-        
-        if (chessPiece != null)
-            layeredPane.remove(chessPiece);
+        List<PieceIHM> listePiece = (LinkedList) arg;
 
-        for(int i=0;i<chessBoard.getComponentCount();i++ )
-            ((JPanel)(chessBoard.getComponent(i))).removeAll();
+        if (chessPiece != null) {
+            layeredPane.remove(chessPiece);
+        }
+
+        for (int i = 0; i < chessBoard.getComponentCount(); i++) {
+            ((JPanel) (chessBoard.getComponent(i))).removeAll();
+            JPanel square = (JPanel) (chessBoard.getComponent(i));
+
+            int row = (i / 8) % 2;
+            if (row == 0) {
+                square.setBackground(i % 2 == 0 ? Color.black : Color.white);
+            } else {
+                square.setBackground(i % 2 == 0 ? Color.white : Color.black);
+            }
+        }
 
         for (PieceIHM p : listePiece) {
             List<Coord> listCoord = p.getList();

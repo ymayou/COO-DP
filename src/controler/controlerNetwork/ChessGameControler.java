@@ -33,6 +33,11 @@ public class ChessGameControler implements ChessGameControlers, Runnable {
     private InputStream input;
     private Thread reception;
     
+    
+    public boolean isMoveOk(int xInit,int  yInit,int  xFinal,int  yFinal){
+        return game.isMoveOk(xInit, yInit, xFinal, yFinal);
+    }
+    
     @Override
     public void run() {
         while(true)
