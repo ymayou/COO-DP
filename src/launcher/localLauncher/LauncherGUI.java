@@ -7,6 +7,8 @@
 package launcher.localLauncher;
 
 import controler.controlerNetwork.ChessGameControler;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.logging.Level;
@@ -23,23 +25,27 @@ import vue.ChessGameGUI;
 public class LauncherGUI {
     
     public static void main(String[] args){
-        ChessGame chessGame;
-        ChessGameControler chessGameControler;		
-        
-        
-        chessGame = new ChessGame();
-        chessGameControler = new ChessGameControler(chessGame);
+        ChessGame chessGame = new ChessGame();
+        final ChessGameControler chessGameControler = new ChessGameControler(chessGame);
         ChessGameGUI viewCmd = new ChessGameGUI(chessGameControler);
         
-        chessGameControler.initClient();
         chessGame.addObserver(viewCmd);
         
         JFrame frame = viewCmd;
         frame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent windowEvent) {
+                chessGameControler.closeReception();
+                System.exit(0);
+            }
+        });
         frame.pack();
         frame.setResizable(false);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+        
+        chessGameControler.initClient();
     }
     
 }

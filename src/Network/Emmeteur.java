@@ -7,33 +7,27 @@ package Network;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import model.Coord;
 
 /**
  *
  * @author Flo
  */
 public class Emmeteur {
-    private Socket s;
     private ObjectOutputStream output;
     
-    public Emmeteur(Socket s) {
-        this.s = s;
-        try {
-            this.output = new ObjectOutputStream(s.getOutputStream());
-        } catch (IOException ex) {
-            Logger.getLogger(Emmeteur.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public Emmeteur() {
     }
     
-    public void sendMessage(Object obj)
+    public void sendMessage(Object coord, Socket s)
     {
         try {
-            this.output.writeObject(obj);
+            this.output = new ObjectOutputStream(s.getOutputStream());
+            this.output.writeObject(coord);
+            this.output.flush();
         } catch (IOException ex) {
             Logger.getLogger(Emmeteur.class.getName()).log(Level.SEVERE, null, ex);
         }

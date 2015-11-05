@@ -165,7 +165,8 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
     public void update(Observable o, Object arg) {
         List<PieceIHM> listePiece = (LinkedList)arg;
         
-        layeredPane.remove(chessPiece);
+        if (chessPiece != null)
+            layeredPane.remove(chessPiece);
 
         for(int i=0;i<chessBoard.getComponentCount();i++ )
             ((JPanel)(chessBoard.getComponent(i))).removeAll();
@@ -178,6 +179,8 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
                 JPanel panel = (JPanel) chessBoard.getComponent(pos);
                 panel.removeAll();
                 panel.add(piece);
+                panel.revalidate();
+                panel.repaint();
             }
         }
         chessBoard.repaint();

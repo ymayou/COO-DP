@@ -6,12 +6,12 @@
 package launcher.localLauncher;
 
 import controler.controlerNetwork.ChessGameControler;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import javax.swing.JFrame;
+import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 import model.observable.ChessGame;
+import vue.ChessGameGUI;
 
 /**
  *
@@ -21,12 +21,26 @@ public class LauncherServer {
 
     public static void main(String[] args) {
 
-        ChessGame chessGame;
-        ChessGameControler chessGameControler;
-        chessGame = new ChessGame();
-        chessGameControler = new ChessGameControler(chessGame);
+        ChessGame chessGame = new ChessGame();
+        final ChessGameControler chessGameControler = new ChessGameControler(chessGame);
         chessGameControler.initServer();
-        LauncherGUI.main(args);
-
+        
+        ChessGameGUI viewCmd = new ChessGameGUI(chessGameControler);
+        chessGame.addObserver(viewCmd);
+        
+        JFrame frame = viewCmd;
+        frame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent windowEvent) {
+                chessGameControler.closeReception();
+                System.exit(0);
+            }
+        });
+        frame.pack();
+        frame.setResizable(false);
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+        
     }
 }

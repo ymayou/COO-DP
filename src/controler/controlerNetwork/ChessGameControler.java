@@ -5,9 +5,10 @@
  */
 package controler.controlerNetwork;
 import Network.Emmeteur;
-import Network.Recepteur;
 import controler.ChessGameControlers;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -29,11 +30,30 @@ public class ChessGameControler implements ChessGameControlers, Runnable {
     private ServerSocket ss;
     private Socket s;
     private Emmeteur emmeteur;
-    private Recepteur recepteur;
+    private InputStream input;
+    private Thread reception;
     
     @Override
     public void run() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        while(true)
+        {
+            try {
+                this.input = this.s.getInputStream();
+                try {
+                    Object obj = new ObjectInputStream(this.input).readObject();
+                    if (obj != null)
+                    {
+                        String[] result = ((String)obj).split("|");
+                        game.move(Integer.parseInt(result[1]), Integer.parseInt(result[3]), Integer.parseInt(result[5]), Integer.parseInt(result[7]));
+                        break;
+                    }
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(ChessGameControler.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            } catch (IOException e) {
+                System.err.println("aucun message");
+            }
+        }
     }
 
     public ChessGameControler() {
@@ -44,10 +64,11 @@ public class ChessGameControler implements ChessGameControlers, Runnable {
         try {
             this.ss = new ServerSocket(2009, 2, InetAddress.getByAddress(new byte[]{127,0,0,1}));
             System.out.println("Le serveur est à l'écoute du port "+ss.getLocalPort());
-            
+
             Thread thAccept = new Thread(new AccepterClient(ss));
             thAccept.start();
-            
+            this.s = new Socket("127.0.0.1", 2009);
+            this.emmeteur = new Emmeteur();
         } catch (IOException e) {
                 System.err.println("Le port est déjà utilisé !");
         }
@@ -56,10 +77,10 @@ public class ChessGameControler implements ChessGameControlers, Runnable {
     public void initClient()
     {
         try {
-            s = new Socket("127.0.0.1", 2009);
-            Thread thClient = new Thread(new Recepteur(s));
-            thClient.start();
-            emmeteur = new Emmeteur(s);
+            this.s = new Socket("127.0.0.1", 2009);
+            this.emmeteur = new Emmeteur();
+            reception = new Thread(this);
+            reception.start();
         } catch (IOException ex) {
             Logger.getLogger(ChessGameControler.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -75,8 +96,14 @@ public class ChessGameControler implements ChessGameControlers, Runnable {
 
     @Override
     public boolean move(Coord initCoord, Coord finalCoord) {
-        emmeteur.sendMessage("yacine");
-        return this.game.move(initCoord.x, initCoord.y, finalCoord.x, finalCoord.y);
+        this.game.move(initCoord.x, initCoord.y, finalCoord.x, finalCoord.y);
+        
+        String parser = initCoord.x + "|" + initCoord.y + "|" + finalCoord.x + "|" + finalCoord.y; 
+        emmeteur.sendMessage(parser, s);
+        
+        reception = new Thread(this);
+        reception.start();
+        return true;
     }
 
     @Override
@@ -95,6 +122,15 @@ public class ChessGameControler implements ChessGameControlers, Runnable {
     public Couleur getColorCurrentPlayer() {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         return this.game.getColorCurrentPlayer();
+    }
+    
+    public void closeReception()
+    {
+        if (reception!= null)
+        {
+            if (reception.isAlive())
+                reception = null;
+        }
     }
     
     private class AccepterClient implements Runnable
