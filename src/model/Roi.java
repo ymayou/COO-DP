@@ -28,11 +28,19 @@ public class Roi extends AbstractPiece {
         if ((Math.abs(yFinal - this.getY()) <= 1)
                 && (Math.abs(xFinal - this.getX()) <= 1)) {
             ret = true;
-        } else if ((Math.abs(yFinal - this.getY()) == 0)
-                && ((xFinal == this.getX() + 2 || xFinal == this.getX() + 3) || (xFinal == this.getX() - 2 || xFinal == this.getX() - 3))
-                && this.roque) {
-            ret = true;
-        }
+        } else
+        {
+            int dep = 0;
+            if (this.getX() > xFinal)
+                dep = 3;
+            else
+                dep = 2;
+            
+            if ((Math.abs(yFinal - this.getY()) == 0)
+                && (xFinal == this.getX() + dep || xFinal == this.getX() - dep)
+                && this.roque)
+                    ret = true;
+        }   
         return ret;
     }
 
