@@ -32,15 +32,14 @@ public class ChessGame extends Observable
         return ech.isMoveOk(xInit, yInit, xFinal, yFinal);
     }
     
-    public boolean move (int xInit, int yInit, int xFinal, int yFinal)
+    public boolean move (int xInit, int yInit, int xFinal, int yFinal, Couleur colorPlayer)
     {
         boolean ret = false;
         
-        if(ech.isMoveOk(xInit, yInit, xFinal, yFinal)){
+        if(ech.isMoveOk(xInit, yInit, xFinal, yFinal) && colorPlayer.equals(this.getColorCurrentPlayer())){
             ech.move(xInit, yInit, xFinal, yFinal);
             ech.switchJoueur();
             ret=true;
-            
         } 
         setChanged();
         notifyObservers(ech.getPiecesIHM());

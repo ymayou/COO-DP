@@ -4,8 +4,10 @@
  * and open the template in the editor.
  */
 package controler.controlerNetwork;
+
 import Network.Emmeteur;
 import controler.ChessGameControlers;
+import java.awt.Color;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -32,24 +34,31 @@ public class ChessGameControler implements ChessGameControlers, Runnable {
     private Emmeteur emmeteur;
     private InputStream input;
     private Thread reception;
-    
-    
-    public boolean isMoveOk(int xInit,int  yInit,int  xFinal,int  yFinal){
+    private Couleur colorPlayer;
+
+    public boolean isMoveOk(int xInit, int yInit, int xFinal, int yFinal) {
         return game.isMoveOk(xInit, yInit, xFinal, yFinal);
     }
-    
+
+    private boolean isMyTurn() {
+        boolean ret = false;
+        if (this.colorPlayer.equals(game.getColorCurrentPlayer())) {
+            ret = true;
+        }
+        return ret;
+    }
+
     @Override
     public void run() {
-        while(true)
-        {
+        while (true) {
             try {
                 this.input = this.s.getInputStream();
                 try {
                     Object obj = new ObjectInputStream(this.input).readObject();
-                    if (obj != null)
-                    {
-                        String[] result = ((String)obj).split("|");
-                        game.move(Integer.parseInt(result[1]), Integer.parseInt(result[3]), Integer.parseInt(result[5]), Integer.parseInt(result[7]));
+                    if (obj != null) {
+                        String[] result = ((String) obj).split("|");
+                        Couleur adversaire = (colorPlayer.equals(Couleur.BLANC)) ? Couleur.NOIR : Couleur.BLANC;
+                        game.move(Integer.parseInt(result[1]), Integer.parseInt(result[3]), Integer.parseInt(result[5]), Integer.parseInt(result[7]), adversaire);
                         break;
                     }
                 } catch (ClassNotFoundException ex) {
@@ -64,23 +73,25 @@ public class ChessGameControler implements ChessGameControlers, Runnable {
     public ChessGameControler() {
         this.game = new ChessGame();
     }
-    
-    public void initServer(){
+
+    public void initServer() {
         try {
-            this.ss = new ServerSocket(2009, 2, InetAddress.getByAddress(new byte[]{127,0,0,1}));
-            System.out.println("Le serveur est à l'écoute du port "+ss.getLocalPort());
+            this.colorPlayer = Couleur.BLANC;
+
+            this.ss = new ServerSocket(2009, 2, InetAddress.getByAddress(new byte[]{127, 0, 0, 1}));
+            System.out.println("Le serveur est à l'écoute du port " + ss.getLocalPort());
 
             Thread thAccept = new Thread(new AccepterClient(ss));
             thAccept.start();
             this.s = new Socket("127.0.0.1", 2009);
             this.emmeteur = new Emmeteur();
         } catch (IOException e) {
-                System.err.println("Le port est déjà utilisé !");
+            System.err.println("Le port est déjà utilisé !");
         }
     }
-    
-    public void initClient()
-    {
+
+    public void initClient() {
+        this.colorPlayer = Couleur.NOIR;
         try {
             this.s = new Socket("127.0.0.1", 2009);
             this.emmeteur = new Emmeteur();
@@ -101,13 +112,13 @@ public class ChessGameControler implements ChessGameControlers, Runnable {
 
     @Override
     public boolean move(Coord initCoord, Coord finalCoord) {
-        this.game.move(initCoord.x, initCoord.y, finalCoord.x, finalCoord.y);
-        
-        String parser = initCoord.x + "|" + initCoord.y + "|" + finalCoord.x + "|" + finalCoord.y; 
-        emmeteur.sendMessage(parser, s);
-        
-        reception = new Thread(this);
-        reception.start();
+        if (this.game.move(initCoord.x, initCoord.y, finalCoord.x, finalCoord.y, this.colorPlayer)) {
+            String parser = initCoord.x + "|" + initCoord.y + "|" + finalCoord.x + "|" + finalCoord.y;
+            emmeteur.sendMessage(parser, s);
+
+            reception = new Thread(this);
+            reception.start();
+        }
         return true;
     }
 
@@ -128,30 +139,26 @@ public class ChessGameControler implements ChessGameControlers, Runnable {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         return this.game.getColorCurrentPlayer();
     }
-    
-    public void closeReception()
-    {
-        if (reception!= null)
-        {
-            if (reception.isAlive())
+
+    public void closeReception() {
+        if (reception != null) {
+            if (reception.isAlive()) {
                 reception = null;
+            }
         }
     }
-    
-    private class AccepterClient implements Runnable
-    {
-        
+
+    private class AccepterClient implements Runnable {
+
         ServerSocket ss;
-        
-        public AccepterClient(ServerSocket ss)
-        {
+
+        public AccepterClient(ServerSocket ss) {
             this.ss = ss;
         }
 
         @Override
         public void run() {
-            while(true)
-            {
+            while (true) {
                 try {
                     s = ss.accept();
                     System.out.println("nouvelle connexion");
@@ -161,9 +168,5 @@ public class ChessGameControler implements ChessGameControlers, Runnable {
             }
         }
     }
-    
+
 }
-
-
-
-

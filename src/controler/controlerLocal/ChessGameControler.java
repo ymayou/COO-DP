@@ -37,7 +37,8 @@ public class ChessGameControler implements ChessGameControlers{
     @Override
     public boolean move(Coord initCoord, Coord finalCoord) {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        return this.game.move(initCoord.x, initCoord.y, finalCoord.x, finalCoord.y);
+        //return this.game.move(initCoord.x, initCoord.y, finalCoord.x, finalCoord.y);
+        return true;
     }
 
     @Override

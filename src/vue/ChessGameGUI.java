@@ -41,6 +41,7 @@ import tools.ChessPiecePos;
 public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionListener, Observer {
 
     private ChessGameControler controler;
+    
 
     JLayeredPane layeredPane;
     JPanel chessBoard;
