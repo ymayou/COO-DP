@@ -9,10 +9,6 @@ package launcher.localLauncher;
 import controler.controlerNetwork.ChessGameControler;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.IOException;
-import java.net.Socket;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFrame;
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 import model.observable.ChessGame;
@@ -32,6 +28,7 @@ public class LauncherGUI {
         chessGame.addObserver(viewCmd);
         
         JFrame frame = viewCmd;
+        frame.setTitle("JOUEUR NOIR");
         frame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         frame.addWindowListener(new WindowAdapter() {
             @Override

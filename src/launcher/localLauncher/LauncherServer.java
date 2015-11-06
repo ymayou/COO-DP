@@ -29,6 +29,7 @@ public class LauncherServer {
         chessGame.addObserver(viewCmd);
         
         JFrame frame = viewCmd;
+        frame.setTitle("JOUEUR BLANC");
         frame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         frame.addWindowListener(new WindowAdapter() {
             @Override

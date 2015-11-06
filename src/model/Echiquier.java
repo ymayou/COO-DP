@@ -371,11 +371,38 @@ public class Echiquier {
 		// TODO Auto-generated method stub
 		return false;
 	}
+        
+        public boolean isRoquePossible(int initX, int initY, int finalX)
+        {
+            boolean ret = true;
+            // Petit roque
+            if (initX < finalX)
+            {
+                for (int i = (initX+1); i < 7; i++)
+                {
+                    if (jeuCourant.getPieceName(i, initY) != null)
+                    {
+                        ret = false;
+                    }
+                }
+            }
+            else // Grand roque
+            {
+                for (int i = 1; i < initX; i++)
+                {
+                    if (jeuCourant.getPieceName(i, initY) != null)
+                    {
+                        ret = false;
+                    }
+                }
+            }
+            
+            return ret;
+        }
 
 
 	//	public static void main(String[] args) {
 	//		Echiquier e = new Echiquier();
 	//			System.out.println(e.getPiecesIHM());
 	//		}
-
 }

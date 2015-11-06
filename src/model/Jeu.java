@@ -101,9 +101,47 @@ public class Jeu {
                 }
             }
         }
-
-		// verif déplacement autorisé ds cas roque du roi
-		// TODO 
+        else if (pieceToMove instanceof Roi)
+        {
+        	// Petit roque
+            if (xInit < xFinal)
+            {
+                for (int i = (xInit+1); i < 7; i++)
+                {
+                    if (this.findPiece(i, yInit) != null)
+                    {
+                        isMoveOk = false;
+                    }
+                }
+            }
+            else // Grand roque
+            {
+                for (int i = 1; i < xInit; i++)
+                {
+                    if (this.findPiece(i, yInit) != null)
+                    {
+                    	isMoveOk = false;
+                    }
+                }
+            }
+            if (isMoveOk)
+            {
+            	((Roi) pieceToMove).roqued();
+            	
+            	// on move la tour à côté du roi
+            	// petit roque
+                if (xInit < xFinal)
+                {
+                	Pieces tourRoque = this.findPiece(7, yInit);
+                    tourRoque.move(xFinal - 1, yFinal);
+                }
+                else
+                {
+                	Pieces tourRoque = this.findPiece(0, yInit);
+                    tourRoque.move(xFinal + 1, yFinal);
+                }
+            }   	
+        }
         return isMoveOk;
     }
 
@@ -133,6 +171,32 @@ public class Jeu {
         isPromotion = false;
 
         return ret;
+    }
+    
+    public void moveRoque(int initX, int initY, int finalX, int finalY)
+    {
+        Pieces pieceToMove = this.findPiece(initX, initY);
+        Pieces tourRoque = null;
+        if (pieceToMove != null) 
+        {
+            pieceToMove.move(finalX, finalY);
+            
+            pieceToMoveUndo = pieceToMove;
+            xInitUndo = initX;
+            yInitUndo = initY;
+            
+            // petit roque
+            if (initX < finalX)
+            {
+                tourRoque = this.findPiece(7, initY);
+                tourRoque.move(finalX - 1, finalY);
+            }
+            else
+            {
+                tourRoque = this.findPiece(0, initY);
+                tourRoque.move(finalX + 1, finalY);
+            }
+        }
     }
 
     /**

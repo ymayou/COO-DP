@@ -10,6 +10,7 @@ import java.util.Observable;
 import model.Couleur;
 import model.Echiquier;
 import model.PieceIHM;
+import model.Pieces;
 
 /**
  *
