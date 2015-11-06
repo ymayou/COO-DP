@@ -7,7 +7,6 @@ package controler.controlerNetwork;
 
 import Network.Emmeteur;
 import controler.ChessGameControlers;
-import java.awt.Color;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -38,14 +37,6 @@ public class ChessGameControler implements ChessGameControlers, Runnable {
 
     public boolean isMoveOk(int xInit, int yInit, int xFinal, int yFinal) {
         return game.isMoveOk(xInit, yInit, xFinal, yFinal);
-    }
-
-    private boolean isMyTurn() {
-        boolean ret = false;
-        if (this.colorPlayer.equals(game.getColorCurrentPlayer())) {
-            ret = true;
-        }
-        return ret;
     }
 
     @Override
